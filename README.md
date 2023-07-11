@@ -1,4 +1,4 @@
-# dyma
+# douyin-miniapp
 
 微信小程序接口，使用protobuf生成的
 
