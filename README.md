@@ -25,4 +25,4 @@ go install github.com/dev-openapi/protoc-gen-go_api@latest
 
 下载本项目，与protocol是同一级目录
 
-然后根据文档在protocol项目中写好proto文件，再执行make gen-dyma会自动生成到本项目目录，最后提交两个项目即可
+然后根据文档在protocol项目中写好proto文件，再执行make douyin-miniapp会自动生成到本项目目录，最后提交两个项目即可
