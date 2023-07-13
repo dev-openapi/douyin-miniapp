@@ -12,6 +12,7 @@ import (
 	http "net/http"
 	strings "strings"
 	url "net/url"
+	multipart "mime/multipart"
 )
 // Reference imports to suppress errors if they are not otherwise used.
 var _ = context.Background
@@ -22,6 +23,7 @@ var _ = json.Marshal
 var _ = strings.Compare
 var _ = fmt.Errorf
 var _ = url.Parse
+var _ = multipart.ErrMessageTooLarge
 
 
 // Client API for Search service
@@ -62,12 +64,11 @@ func (c *searchService) CreateMaSubService(ctx context.Context, in *CreateMaSubS
 	rawURL := fmt.Sprintf("%s/api/apps/v1/capacity/create_ma_sub_service", opt.addr)
 
 	// body
-	var body io.Reader
 	bs, err := json.Marshal(in)
 	if err != nil {
 		return nil, err
 	}
-	body = bytes.NewReader(bs)
+	body := bytes.NewReader(bs)
 	headers["Content-Type"] = "application/json"
 
 	req, err := http.NewRequest("POST", rawURL, body)
@@ -97,9 +98,7 @@ func (c *searchService) QueryMaSubService(ctx context.Context, in *QueryMaSubSer
 	rawURL := fmt.Sprintf("%s/api/apps/v1/capacity/query_ma_sub_service", opt.addr)
 
 	// body
-	var body io.Reader
-	
-	req, err := http.NewRequest("GET", rawURL, body)
+	req, err := http.NewRequest("GET", rawURL, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -138,9 +137,7 @@ func (c *searchService) DeleteMaSubService(ctx context.Context, in *DeleteMaSubS
 	rawURL := fmt.Sprintf("%s", opt.addr)
 
 	// body
-	var body io.Reader
-	
-	req, err := http.NewRequest("", rawURL, body)
+	req, err := http.NewRequest("", rawURL, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -173,9 +170,7 @@ func (c *searchService) CheckMaSubService(ctx context.Context, in *CheckMaSubSer
 	rawURL := fmt.Sprintf("%s/api/apps/v1/capacity/check_ma_sub_service", opt.addr)
 
 	// body
-	var body io.Reader
-	
-	req, err := http.NewRequest("GET", rawURL, body)
+	req, err := http.NewRequest("GET", rawURL, nil)
 	if err != nil {
 		return nil, err
 	}

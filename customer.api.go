@@ -12,6 +12,7 @@ import (
 	http "net/http"
 	strings "strings"
 	url "net/url"
+	multipart "mime/multipart"
 )
 // Reference imports to suppress errors if they are not otherwise used.
 var _ = context.Background
@@ -22,6 +23,7 @@ var _ = json.Marshal
 var _ = strings.Compare
 var _ = fmt.Errorf
 var _ = url.Parse
+var _ = multipart.ErrMessageTooLarge
 
 
 // Client API for Customer service
@@ -56,9 +58,7 @@ func (c *customerService) GetCustomer(ctx context.Context, in *GetCustomerReq, o
 	rawURL := fmt.Sprintf("%s/api/apps/chat/customer_service_url", opt.addr)
 
 	// body
-	var body io.Reader
-	
-	req, err := http.NewRequest("GET", rawURL, body)
+	req, err := http.NewRequest("GET", rawURL, nil)
 	if err != nil {
 		return nil, err
 	}

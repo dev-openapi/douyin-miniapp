@@ -12,6 +12,7 @@ import (
 	http "net/http"
 	strings "strings"
 	url "net/url"
+	multipart "mime/multipart"
 )
 // Reference imports to suppress errors if they are not otherwise used.
 var _ = context.Background
@@ -22,6 +23,7 @@ var _ = json.Marshal
 var _ = strings.Compare
 var _ = fmt.Errorf
 var _ = url.Parse
+var _ = multipart.ErrMessageTooLarge
 
 
 // Client API for Oauth service
@@ -56,18 +58,18 @@ func (c *oauthService) GetClientToken(ctx context.Context, in *GetClientTokenReq
 	rawURL := fmt.Sprintf("%s/oauth/client_token/", opt.addr)
 
 	// body
-	var body io.Reader
-	bodyForms := url.Values{} 
+	body := new(bytes.Buffer)
+	bodyForms := multipart.NewWriter(body) 
 	if in.GetClientKey() != "" {
-		bodyForms.Add("client_key", fmt.Sprintf("%v", in.GetClientKey()))
+		bodyForms.WriteField("client_key", fmt.Sprintf("%v", in.GetClientKey()))
 	}
 	if in.GetClientSecret() != "" {
-		bodyForms.Add("client_secret", fmt.Sprintf("%v", in.GetClientSecret()))
+		bodyForms.WriteField("client_secret", fmt.Sprintf("%v", in.GetClientSecret()))
 	}
 	if in.GetGrantType() != "" {
-		bodyForms.Add("grant_type", fmt.Sprintf("%v", in.GetGrantType()))
+		bodyForms.WriteField("grant_type", fmt.Sprintf("%v", in.GetGrantType()))
 	}
-	body = strings.NewReader(bodyForms.Encode())
+	defer func() { _ =  bodyForms.Close() } ()
 	headers["Content-Type"] = "multipart/form-data"
 
 	req, err := http.NewRequest("POST", rawURL, body)

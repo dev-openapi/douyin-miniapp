@@ -12,6 +12,7 @@ import (
 	http "net/http"
 	strings "strings"
 	url "net/url"
+	multipart "mime/multipart"
 )
 // Reference imports to suppress errors if they are not otherwise used.
 var _ = context.Background
@@ -22,6 +23,7 @@ var _ = json.Marshal
 var _ = strings.Compare
 var _ = fmt.Errorf
 var _ = url.Parse
+var _ = multipart.ErrMessageTooLarge
 
 
 // Client API for Credential service
@@ -57,12 +59,11 @@ func (c *credentialService) GetAccessToken(ctx context.Context, in *GetAccessTok
 	rawURL := fmt.Sprintf("%s/api/apps/v2/token", opt.addr)
 
 	// body
-	var body io.Reader
 	bs, err := json.Marshal(in)
 	if err != nil {
 		return nil, err
 	}
-	body = bytes.NewReader(bs)
+	body := bytes.NewReader(bs)
 	headers["Content-Type"] = "application/json"
 
 	req, err := http.NewRequest("POST", rawURL, body)

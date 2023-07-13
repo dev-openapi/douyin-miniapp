@@ -12,6 +12,7 @@ import (
 	http "net/http"
 	strings "strings"
 	url "net/url"
+	multipart "mime/multipart"
 )
 // Reference imports to suppress errors if they are not otherwise used.
 var _ = context.Background
@@ -22,6 +23,7 @@ var _ = json.Marshal
 var _ = strings.Compare
 var _ = fmt.Errorf
 var _ = url.Parse
+var _ = multipart.ErrMessageTooLarge
 
 
 // Client API for Ecom service
@@ -62,12 +64,11 @@ func (c *ecomService) RegisterInfo(ctx context.Context, in *RegisterInfoReq, opt
 	rawURL := fmt.Sprintf("%s/api/apps/industry/ecom/register_info", opt.addr)
 
 	// body
-	var body io.Reader
 	bs, err := json.Marshal(in.GetBody())
 	if err != nil {
 		return nil, err
 	}
-	body = bytes.NewReader(bs)
+	body := bytes.NewReader(bs)
 	headers["Content-Type"] = "application/json"
 
 	req, err := http.NewRequest("POST", rawURL, body)
@@ -97,12 +98,11 @@ func (c *ecomService) PointLimitRegister(ctx context.Context, in *PointLimitRegi
 	rawURL := fmt.Sprintf("%s/api/apps/industry/ecom/point/limit/register", opt.addr)
 
 	// body
-	var body io.Reader
 	bs, err := json.Marshal(in.GetBody())
 	if err != nil {
 		return nil, err
 	}
-	body = bytes.NewReader(bs)
+	body := bytes.NewReader(bs)
 	headers["Content-Type"] = "application/json"
 
 	req, err := http.NewRequest("POST", rawURL, body)
@@ -132,12 +132,11 @@ func (c *ecomService) GetCustomMadeGoodsStatus(ctx context.Context, in *GetCusto
 	rawURL := fmt.Sprintf("%s/api/apps/industry/ecom/get_custom_made_goods_status", opt.addr)
 
 	// body
-	var body io.Reader
 	bs, err := json.Marshal(in)
 	if err != nil {
 		return nil, err
 	}
-	body = bytes.NewReader(bs)
+	body := bytes.NewReader(bs)
 	headers["Content-Type"] = "application/json"
 
 	req, err := http.NewRequest("POST", rawURL, body)
@@ -167,12 +166,11 @@ func (c *ecomService) LeaveMember(ctx context.Context, in *LeaveMemberReq, opts 
 	rawURL := fmt.Sprintf("%s/api/apps/industry/ecom/v1/shop/leave_member", opt.addr)
 
 	// body
-	var body io.Reader
 	bs, err := json.Marshal(in)
 	if err != nil {
 		return nil, err
 	}
-	body = bytes.NewReader(bs)
+	body := bytes.NewReader(bs)
 	headers["Content-Type"] = "application/json"
 
 	req, err := http.NewRequest("POST", rawURL, body)

@@ -12,6 +12,7 @@ import (
 	http "net/http"
 	strings "strings"
 	url "net/url"
+	multipart "mime/multipart"
 )
 // Reference imports to suppress errors if they are not otherwise used.
 var _ = context.Background
@@ -22,6 +23,7 @@ var _ = json.Marshal
 var _ = strings.Compare
 var _ = fmt.Errorf
 var _ = url.Parse
+var _ = multipart.ErrMessageTooLarge
 
 
 // Client API for Datacache service
@@ -58,12 +60,11 @@ func (c *datacacheService) SetUserStorage(ctx context.Context, in *SetUserStorag
 	rawURL := fmt.Sprintf("%s/api/apps/set_user_storage", opt.addr)
 
 	// body
-	var body io.Reader
 	bs, err := json.Marshal(in.GetBody())
 	if err != nil {
 		return nil, err
 	}
-	body = bytes.NewReader(bs)
+	body := bytes.NewReader(bs)
 	headers["Content-Type"] = "application/json"
 
 	req, err := http.NewRequest("POST", rawURL, body)
@@ -108,12 +109,11 @@ func (c *datacacheService) RemoveUserStorage(ctx context.Context, in *RemoveUser
 	rawURL := fmt.Sprintf("%s/api/apps/remove_user_storage", opt.addr)
 
 	// body
-	var body io.Reader
 	bs, err := json.Marshal(in.GetBody())
 	if err != nil {
 		return nil, err
 	}
-	body = bytes.NewReader(bs)
+	body := bytes.NewReader(bs)
 	headers["Content-Type"] = "application/json"
 
 	req, err := http.NewRequest("POST", rawURL, body)
