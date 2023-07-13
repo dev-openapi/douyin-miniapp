@@ -53,7 +53,7 @@ func (c *oauthService) GetClientToken(ctx context.Context, in *GetClientTokenReq
 	opt := buildOptions(c.opts, opts...)
 	headers := make(map[string]string)
 	// route
-	rawURL := fmt.Sprintf("%s/oauth/client_token", opt.addr)
+	rawURL := fmt.Sprintf("%s/oauth/client_token/", opt.addr)
 
 	// body
 	var body io.Reader
