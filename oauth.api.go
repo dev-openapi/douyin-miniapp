@@ -58,19 +58,18 @@ func (c *oauthService) GetClientToken(ctx context.Context, in *GetClientTokenReq
 	rawURL := fmt.Sprintf("%s/oauth/client_token/", opt.addr)
 
 	// body
-	body := new(bytes.Buffer)
-	bodyForms := multipart.NewWriter(body) 
+	bodyForms := url.Values{} 
 	if in.GetClientKey() != "" {
-		bodyForms.WriteField("client_key", fmt.Sprintf("%v", in.GetClientKey()))
+		bodyForms.Add("client_key", fmt.Sprintf("%v", in.GetClientKey()))
 	}
 	if in.GetClientSecret() != "" {
-		bodyForms.WriteField("client_secret", fmt.Sprintf("%v", in.GetClientSecret()))
+		bodyForms.Add("client_secret", fmt.Sprintf("%v", in.GetClientSecret()))
 	}
 	if in.GetGrantType() != "" {
-		bodyForms.WriteField("grant_type", fmt.Sprintf("%v", in.GetGrantType()))
+		bodyForms.Add("grant_type", fmt.Sprintf("%v", in.GetGrantType()))
 	}
-	defer func() { _ =  bodyForms.Close() } ()
-	headers["Content-Type"] = "multipart/form-data"
+	body := strings.NewReader(bodyForms.Encode())
+	headers["Content-Type"] = "application/x-www-form-urlencoded"
 
 	req, err := http.NewRequest("POST", rawURL, body)
 	if err != nil {
