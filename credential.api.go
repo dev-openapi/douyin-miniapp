@@ -25,7 +25,8 @@ var _ = fmt.Errorf
 // Client API for Credential service
 
 type CredentialService interface {
-	// GetAccessToken  Deprecated 接口调用凭证 https://developer.open-douyin.com/docs/resource/zh-CN/mini-app/develop/server/interface-request-credential/get-access-token
+	// GetAccessToken  接口调用凭证 https://developer.open-douyin.com/docs/resource/zh-CN/mini-app/develop/server/interface-request-credential/get-access-token
+	// Deprecated 建议调用oauth的client_token
 	GetAccessToken(ctx context.Context, in *GetAccessTokenReq, opts ...Option) (*GetAccessTokenRes, error)
 }
 
